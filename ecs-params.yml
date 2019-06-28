@@ -1,0 +1,24 @@
+version: 1
+task_definition:
+  ecs_network_mode: awsvpc
+  task_execution_role: "arn:aws:iam::FIXME:role/dev-fargate-task"
+  task_size:
+    cpu_limit: 512
+    mem_limit: 1024
+  services:
+    redash:
+      essential: true
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/db-password-FIXME"
+          name: DB_PASSWORD
+run_params:
+  network_configuration:
+    awsvpc_configuration:
+      subnets:
+        - "subnet-FIXME"
+        - "subnet-FIXME"
+        - "subnet-FIXME"
+      security_groups:
+        - "sg-FIXME"
+      # assign_public_ip: DISABLED
+      assign_public_ip: ENABLED
