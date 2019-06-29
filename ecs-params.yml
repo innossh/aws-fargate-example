@@ -1,7 +1,7 @@
 version: 1
 task_definition:
   ecs_network_mode: awsvpc
-  task_execution_role: "arn:aws:iam::FIXME:role/dev-fargate-task"
+  task_execution_role: "arn:aws:iam::FIXME:role/dev-fargate-redash"
   task_size:
     cpu_limit: 512
     mem_limit: 1024
@@ -9,7 +9,7 @@ task_definition:
     redash:
       essential: true
       secrets:
-        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/db-password-FIXME"
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-password-FIXME"
           name: DB_PASSWORD
 run_params:
   network_configuration:

@@ -1,11 +1,15 @@
 output "postgresql_role_redash_password" { value = "${postgresql_role.redash.password}" }
 
+data "aws_db_instance" "fargate_pg" {
+  db_instance_identifier = "${var.site_id}-fargate-pg"
+}
+
 provider "postgresql" {
-  host            = "${aws_db_instance.fargate_db_pg.address}"
+  host            = "${data.aws_db_instance.fargate_pg.address}"
   port            = 5432
   database        = "postgres"
   username        = "root"
-  password        = "${aws_db_instance.fargate_db_pg.password}"
+  password        = "${var.db_root_password}"
   superuser       = false
   sslmode         = "require"
   connect_timeout = 15
