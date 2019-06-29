@@ -6,16 +6,19 @@ services:
     command: server
     ports:
       - "5000:5000"
+    # depends_on:
+    #   - postgres
+    #   - redis
     environment:
       # REDASH_WEB_WORKERS: 4
       REDASH_WEB_WORKERS: 1
-      # PYTHONUNBUFFERED: 0
-      # REDASH_LOG_LEVEL: INFO
-      # REDASH_REDIS_URL: redis://redis:6379/0
-      # POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      # REDASH_COOKIE_SECRET: $COOKIE_SECRET
-      # REDASH_SECRET_KEY: $SECRET_KEY
-      # REDASH_DATABASE_URL: $REDASH_DATABASE_URL
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      # POSTGRES_PASSWORD:
+      REDASH_COOKIE_SECRET: "FIXME"
+      REDASH_SECRET_KEY: "FIXME"
+      REDASH_DATABASE_URL: "postgresql://redash:${POSTGRES_PASSWORD}@postgres/redash"
     logging:
       driver: awslogs
       options:
@@ -40,3 +43,11 @@ services:
   #   environment:
   #     QUEUES: "queries"
   #     WORKERS_COUNT: 2
+  # redis:
+  #   image: redis:3.0-alpine
+  # postgres:
+  #   image: postgres:9.5.6-alpine
+  #   environment:
+  #     POSTGRES_PASSWORD:
+  #     POSTGRES_USER: "redash"
+  #     POSTGRES_DB: "redash"
