@@ -6,19 +6,29 @@ services:
     command: server
     ports:
       - "5000:5000"
-    # depends_on:
-    #   - postgres
-    #   - redis
     environment:
-      # REDASH_WEB_WORKERS: 4
-      REDASH_WEB_WORKERS: 1
+      REDASH_WEB_WORKERS: 2
       PYTHONUNBUFFERED: 0
       REDASH_LOG_LEVEL: "INFO"
-      REDASH_REDIS_URL: "redis://redis:6379/0"
-      # POSTGRES_PASSWORD:
+      REDASH_REDIS_URL: "redis://FIXME:6379/0"
       REDASH_COOKIE_SECRET: "FIXME"
       REDASH_SECRET_KEY: "FIXME"
-      REDASH_DATABASE_URL: "postgresql://redash:${POSTGRES_PASSWORD}@postgres/redash"
+      REDASH_THROTTLE_LOGIN_PATTERN: "150/hour"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/dev-fargate/redash
+        awslogs-region: ap-northeast-1
+        awslogs-stream-prefix: ecs
+  create_db:
+    image: redash/redash:7.0.0.b18042
+    command: create_db
+    environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://FIXME:6379/0"
+      REDASH_COOKIE_SECRET: "FIXME"
+      REDASH_SECRET_KEY: "FIXME"
     logging:
       driver: awslogs
       options:
@@ -43,11 +53,3 @@ services:
   #   environment:
   #     QUEUES: "queries"
   #     WORKERS_COUNT: 2
-  # redis:
-  #   image: redis:3.0-alpine
-  # postgres:
-  #   image: postgres:9.5.6-alpine
-  #   environment:
-  #     POSTGRES_PASSWORD:
-  #     POSTGRES_USER: "redash"
-  #     POSTGRES_DB: "redash"

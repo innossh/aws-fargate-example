@@ -1,4 +1,4 @@
-output "aws_lb_fargate_redash_arn" { value = "${aws_lb.fargate_redash.arn}" }
+output "aws_lb_target_group_fargate_redash_http_arn" { value = "${aws_lb_target_group.fargate_redash_http.arn}" }
 
 locals {
   elb_account_ids = {
@@ -20,7 +20,7 @@ resource "aws_lb" "fargate_redash" {
     prefix  = "fargate-redash"
     enabled = true
   }
-  subnets         = "${aws_subnet.main_private.*.id}"
+  subnets         = "${aws_subnet.main_public.*.id}"
   ip_address_type = "ipv4"
 
   tags = {
@@ -96,5 +96,16 @@ resource "aws_lb_target_group" "fargate_redash_http" {
   port = 5000
   protocol = "HTTP"
   vpc_id = "${aws_vpc.main.id}"
+  deregistration_delay = 300
+  slow_start = 30
   target_type = "ip"
+
+  health_check {
+    interval = 30
+    path = "/login"
+    protocol = "HTTP"
+    healthy_threshold = 3
+    unhealthy_threshold = 3
+    matcher = "200,302"
+  }
 }

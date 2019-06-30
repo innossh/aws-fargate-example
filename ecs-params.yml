@@ -6,11 +6,16 @@ task_definition:
     cpu_limit: 512
     mem_limit: 1024
   services:
-    redash:
+    server:
       essential: true
       secrets:
-        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-password-FIXME"
-          name: DB_PASSWORD
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
+          name: REDASH_DATABASE_URL
+    create_db:
+      essential: false
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
+          name: REDASH_DATABASE_URL
 run_params:
   network_configuration:
     awsvpc_configuration:
@@ -20,5 +25,4 @@ run_params:
         - "subnet-FIXME"
       security_groups:
         - "sg-FIXME"
-      # assign_public_ip: DISABLED
-      assign_public_ip: ENABLED
+      assign_public_ip: DISABLED

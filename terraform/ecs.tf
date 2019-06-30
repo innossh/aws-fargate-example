@@ -19,15 +19,13 @@ resource "aws_security_group" "fargate_redash" {
   }
 }
 resource "aws_security_group_rule" "fargate_redash_ingress_http" {
-  type = "ingress"
-  cidr_blocks = [
-    "${var.cidr_office}"
-  ]
-  from_port         = 5000
-  protocol          = "tcp"
-  security_group_id = "${aws_security_group.fargate_redash.id}"
-  to_port           = 5000
-  description       = "Allow http inbound traffic from my office"
+  type                     = "ingress"
+  from_port                = 5000
+  protocol                 = "tcp"
+  security_group_id        = "${aws_security_group.fargate_redash.id}"
+  source_security_group_id = "${aws_security_group.lb_fargate_redash.id}"
+  to_port                  = 5000
+  description              = "Allow http inbound traffic from load balancer"
 }
 resource "aws_security_group_rule" "fargate_redash_egress_all" {
   type = "egress"

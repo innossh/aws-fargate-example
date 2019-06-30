@@ -3,9 +3,9 @@ output "aws_secretsmanager_secret_fargate_redash_arns" { value = "${aws_secretsm
 locals {
   secrets = [
     {
-      name          = "${var.site_id}-fargate/redash-db-password"
-      description   = "Password of the Redash database"
-      secret_string = "${random_string.role_redash_password.result}"
+      name          = "${var.site_id}-fargate/redash-db-url"
+      description   = "The Redash database URL including password"
+      secret_string = "postgresql://redash:${random_string.role_redash_password.result}@${data.aws_db_instance.fargate_pg.address}/redash"
     }
   ]
 }
