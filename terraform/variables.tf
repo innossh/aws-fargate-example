@@ -1,6 +1,9 @@
 variable "cidr_office" {
   default = ""
 }
+variable "s3_bucket_name" {
+  default = ""
+}
 
 locals {
   vpc_cidr_block = "10.1.0.0/21"

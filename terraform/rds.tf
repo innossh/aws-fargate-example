@@ -36,7 +36,8 @@ resource "aws_db_instance" "fargate_pg" {
   }
 }
 resource "aws_db_subnet_group" "fargate_pg" {
-  name       = "${var.site_id}-fargate-pg"
+  name = "${var.site_id}-fargate-pg"
+  # subnet_ids = "${aws_subnet.main_private.*.id}"
   subnet_ids = "${aws_subnet.main_public.*.id}"
 
   tags = {

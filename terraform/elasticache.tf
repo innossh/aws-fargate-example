@@ -15,7 +15,7 @@ resource "aws_elasticache_replication_group" "fargate_redis" {
   security_group_ids = [
     "${aws_security_group.fargate_redis.id}"
   ]
-  maintenance_window = "mon:12:00-mon:12:30"
+  maintenance_window = "mon:12:00-mon:13:00"
 
   tags = {
     Owner = "${var.owner}"
@@ -24,7 +24,8 @@ resource "aws_elasticache_replication_group" "fargate_redis" {
 resource "aws_elasticache_subnet_group" "fargate_redis" {
   name        = "${var.site_id}-fargate-redis"
   description = "Subnet group of Redis for Fargate"
-  subnet_ids  = "${aws_subnet.main_public.*.id}"
+  # subnet_ids  = "${aws_subnet.main_private.*.id}"
+  subnet_ids = "${aws_subnet.main_public.*.id}"
 }
 resource "aws_elasticache_parameter_group" "fargate_redis" {
   name        = "${var.site_id}-fargate-redis"
