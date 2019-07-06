@@ -53,7 +53,7 @@ var.s3_bucket_name
 ...
 ```
 
-After that, apply Terraform again to create a PostgreSQL database. It's needed to separate directories to avoid the postgresql provider issue. https://github.com/terraform-providers/terraform-provider-postgresql/issues/2
+And apply Terraform again to create a PostgreSQL database. It's needed to separate directories to avoid the postgresql provider issue. https://github.com/terraform-providers/terraform-provider-postgresql/issues/2
 
 ```console
 $ cd terraform/postgresql
@@ -69,6 +69,13 @@ var.owner
 
   Enter a value: your.name
 ...
+```
+
+After that, you need to prepare the file `ecs-params.yml`. You can use a script to generate the file as bellow. Please note that the script depends on [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html#envsubst-Invocation).
+
+```console
+$ ./generate-ecs-params.sh
+ecs-params.yml was generated.
 ```
 
 Finally, deploy Redash service to the Fargate cluster. Please set `<TARGET_GROUP_ARN>` and `<OWNER>` correctly, the owner tag is just a metadata though.
