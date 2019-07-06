@@ -1,6 +1,4 @@
-variable "owner" {
-  default = ""
-}
+variable "owner" { description = "Owner name of resources" }
 variable "site_id" {
   default = "dev"
 }

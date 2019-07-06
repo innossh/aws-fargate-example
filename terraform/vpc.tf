@@ -1,5 +1,9 @@
-output "aws_subnet_main_public_ids" { value = "${aws_subnet.main_public.*.id}" }
-output "aws_subnet_main_private_ids" { value = "${aws_subnet.main_private.*.id}" }
+output "aws_subnet_main_public_id_0" { value = "${aws_subnet.main_public.0.id}" }
+output "aws_subnet_main_public_id_1" { value = "${aws_subnet.main_public.1.id}" }
+output "aws_subnet_main_public_id_2" { value = "${aws_subnet.main_public.2.id}" }
+output "aws_subnet_main_private_id_0" { value = "${aws_subnet.main_private.0.id}" }
+output "aws_subnet_main_private_id_1" { value = "${aws_subnet.main_private.1.id}" }
+output "aws_subnet_main_private_id_2" { value = "${aws_subnet.main_private.2.id}" }
 
 resource "aws_vpc" "main" {
   cidr_block           = "${local.vpc_cidr_block}"

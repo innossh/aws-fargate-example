@@ -36,6 +36,21 @@ Then, apply Terraform to create a Fargate cluster. It takes a while to create RD
 $ cd terraform
 $ terraform init
 $ terraform apply
+var.cidr_office
+  CIDR allowed connecting to resources, like your office's IP
+
+  Enter a value: x.x.x.x/32
+
+var.owner
+  Owner name of resources
+
+  Enter a value: your.name
+
+var.s3_bucket_name
+  Your S3 bucket name
+
+  Enter a value: your-s3-bucket-name
+...
 ```
 
 After that, apply Terraform again to create a PostgreSQL database. It's needed to separate directories to avoid the postgresql provider issue. https://github.com/terraform-providers/terraform-provider-postgresql/issues/2
@@ -44,6 +59,16 @@ After that, apply Terraform again to create a PostgreSQL database. It's needed t
 $ cd terraform/postgresql
 $ terraform init
 $ terraform apply
+var.db_root_password
+  RDS root password
+
+  Enter a value: db_root_pasword
+
+var.owner
+  Owner name of resources
+
+  Enter a value: your.name
+...
 ```
 
 Finally, deploy Redash service to the Fargate cluster. Please set `<TARGET_GROUP_ARN>` and `<OWNER>` correctly, the owner tag is just a metadata though.

@@ -1,4 +1,7 @@
-output "aws_secretsmanager_secret_fargate_redash_arns" { value = "${aws_secretsmanager_secret.fargate_redash.*.arn}" }
+output "aws_secretsmanager_secret_fargate_redash_arn_0" { value = "${aws_secretsmanager_secret.fargate_redash.0.arn}" }
+output "aws_secretsmanager_secret_fargate_redash_arn_1" { value = "${aws_secretsmanager_secret.fargate_redash.1.arn}" }
+output "aws_secretsmanager_secret_fargate_redash_arn_2" { value = "${aws_secretsmanager_secret.fargate_redash.2.arn}" }
+output "aws_secretsmanager_secret_fargate_redash_arn_3" { value = "${aws_secretsmanager_secret.fargate_redash.3.arn}" }
 
 locals {
   secrets = [
@@ -10,7 +13,7 @@ locals {
     {
       name          = "${var.site_id}-fargate/redash-redis-url"
       description   = "The Redash redis URL"
-      secret_string = "redis://${aws_elasticache_replication_group.fargate_redis.primary_endpoint_address}:6379/0"
+      secret_string = "redis://${data.aws_elasticache_replication_group.fargate_redis.primary_endpoint_address}:6379/0"
     },
     {
       name          = "${var.site_id}-fargate/redash-cookie-secret"

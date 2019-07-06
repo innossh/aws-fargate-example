@@ -1,9 +1,5 @@
-variable "cidr_office" {
-  default = ""
-}
-variable "s3_bucket_name" {
-  default = ""
-}
+variable "cidr_office" { description = "CIDR allowed connecting to resources, like your office's IP" }
+variable "s3_bucket_name" { description = "Your S3 bucket name" }
 
 locals {
   vpc_cidr_block = "10.1.0.0/21"
