@@ -11,13 +11,10 @@ task_definition:
       secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
           name: REDASH_DATABASE_URL
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-redis-url-FIXME"
           name: REDASH_REDIS_URL
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-cookie-secret-FIXME"
           name: REDASH_COOKIE_SECRET
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-secret-key-FIXME"
           name: REDASH_SECRET_KEY
     create_db:
@@ -25,13 +22,10 @@ task_definition:
       secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
           name: REDASH_DATABASE_URL
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-redis-url-FIXME"
           name: REDASH_REDIS_URL
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-cookie-secret-FIXME"
           name: REDASH_COOKIE_SECRET
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-secret-key-FIXME"
           name: REDASH_SECRET_KEY
     worker:
@@ -39,13 +33,10 @@ task_definition:
       secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
           name: REDASH_DATABASE_URL
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-redis-url-FIXME"
           name: REDASH_REDIS_URL
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-cookie-secret-FIXME"
           name: REDASH_COOKIE_SECRET
-      secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-secret-key-FIXME"
           name: REDASH_SECRET_KEY
 run_params:
