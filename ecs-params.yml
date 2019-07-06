@@ -4,18 +4,50 @@ task_definition:
   task_execution_role: "arn:aws:iam::FIXME:role/dev-fargate-redash"
   task_size:
     cpu_limit: 512
-    mem_limit: 1024
+    mem_limit: 2048
   services:
     server:
       essential: true
       secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
           name: REDASH_DATABASE_URL
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-redis-url-FIXME"
+          name: REDASH_REDIS_URL
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-cookie-secret-FIXME"
+          name: REDASH_COOKIE_SECRET
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-secret-key-FIXME"
+          name: REDASH_SECRET_KEY
     create_db:
       essential: false
       secrets:
         - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
           name: REDASH_DATABASE_URL
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-redis-url-FIXME"
+          name: REDASH_REDIS_URL
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-cookie-secret-FIXME"
+          name: REDASH_COOKIE_SECRET
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-secret-key-FIXME"
+          name: REDASH_SECRET_KEY
+    worker:
+      essential: true
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-db-url-FIXME"
+          name: REDASH_DATABASE_URL
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-redis-url-FIXME"
+          name: REDASH_REDIS_URL
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-cookie-secret-FIXME"
+          name: REDASH_COOKIE_SECRET
+      secrets:
+        - value_from: "arn:aws:secretsmanager:ap-northeast-1:FIXME:secret:dev-fargate/redash-secret-key-FIXME"
+          name: REDASH_SECRET_KEY
 run_params:
   network_configuration:
     awsvpc_configuration:
