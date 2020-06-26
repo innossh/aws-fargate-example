@@ -1,4 +1,6 @@
-output "aws_lb_target_group_fargate_redash_http_arn" { value = "${aws_lb_target_group.fargate_redash_http.arn}" }
+output "aws_lb_target_group_fargate_redash_http_arn" {
+  value = aws_lb_target_group.fargate_redash_http.arn
+}
 
 locals {
   elb_account_ids = {
@@ -8,59 +10,64 @@ locals {
 }
 
 data "aws_s3_bucket" "lb_fargate_log" {
-  bucket = "${var.s3_bucket_name}"
+  bucket = var.s3_bucket_name
 }
+
 resource "aws_lb" "fargate_redash" {
   name               = "${var.site_id}-fargate-redash"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = ["${aws_security_group.lb_fargate_redash.id}"]
+  security_groups    = [aws_security_group.lb_fargate_redash.id]
   access_logs {
-    bucket  = "${var.s3_bucket_name}"
+    bucket  = var.s3_bucket_name
     prefix  = "fargate-redash"
     enabled = true
   }
-  subnets         = "${aws_subnet.main_public.*.id}"
+  subnets         = aws_subnet.main_public.*.id
   ip_address_type = "ipv4"
 
   tags = {
-    Owner = "${var.owner}"
+    Owner = var.owner
   }
 }
+
 resource "aws_security_group" "lb_fargate_redash" {
   name        = "${var.site_id}-lb-fargate-redash"
   description = "Security group of LB for Redash on Fargate"
-  vpc_id      = "${aws_vpc.main.id}"
+  vpc_id      = aws_vpc.main.id
 
   tags = {
     Name  = "${var.site_id}-lb-fargate-redash"
-    Owner = "${var.owner}"
+    Owner = var.owner
   }
 }
+
 resource "aws_security_group_rule" "lb_fargate_redash_ingress_http" {
   type = "ingress"
   cidr_blocks = [
-    "${var.cidr_office}"
+    var.cidr_office,
   ]
   from_port         = 80
   protocol          = "tcp"
-  security_group_id = "${aws_security_group.lb_fargate_redash.id}"
+  security_group_id = aws_security_group.lb_fargate_redash.id
   to_port           = 80
   description       = "Allow http inbound traffic from my office"
 }
+
 resource "aws_security_group_rule" "lb_fargate_redash_egress_all" {
   type = "egress"
   cidr_blocks = [
-    "0.0.0.0/0"
+    "0.0.0.0/0",
   ]
   from_port         = 0
   protocol          = "-1"
-  security_group_id = "${aws_security_group.lb_fargate_redash.id}"
+  security_group_id = aws_security_group.lb_fargate_redash.id
   to_port           = 0
   description       = "Allow all outbound traffic"
 }
+
 resource "aws_s3_bucket_policy" "lb_fargate_redash_log" {
-  bucket = "${data.aws_s3_bucket.lb_fargate_log.id}"
+  bucket = data.aws_s3_bucket.lb_fargate_log.id
   policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -73,39 +80,43 @@ resource "aws_s3_bucket_policy" "lb_fargate_redash_log" {
       "Resource": "arn:aws:s3:::${data.aws_s3_bucket.lb_fargate_log.id}/fargate-redash/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
       "Principal": {
         "AWS": [
-          "${lookup(local.elb_account_ids, var.aws_region)}"
+          "${local.elb_account_ids[var.aws_region]}"
         ]
       }
     }
   ]
 }
 POLICY
+
 }
+
 resource "aws_lb_listener" "fargate_redash_http" {
-  load_balancer_arn = "${aws_lb.fargate_redash.arn}"
-  port = "80"
-  protocol = "HTTP"
+  load_balancer_arn = aws_lb.fargate_redash.arn
+  port              = "80"
+  protocol          = "HTTP"
 
   default_action {
-    type = "forward"
-    target_group_arn = "${aws_lb_target_group.fargate_redash_http.arn}"
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.fargate_redash_http.arn
   }
 }
+
 resource "aws_lb_target_group" "fargate_redash_http" {
-  name = "fargate-redash-http"
-  port = 5000
-  protocol = "HTTP"
-  vpc_id = "${aws_vpc.main.id}"
+  name                 = "fargate-redash-http"
+  port                 = 5000
+  protocol             = "HTTP"
+  vpc_id               = aws_vpc.main.id
   deregistration_delay = 300
-  slow_start = 30
-  target_type = "ip"
+  slow_start           = 30
+  target_type          = "ip"
 
   health_check {
-    interval = 30
-    path = "/login"
-    protocol = "HTTP"
-    healthy_threshold = 3
+    interval            = 30
+    path                = "/login"
+    protocol            = "HTTP"
+    healthy_threshold   = 3
     unhealthy_threshold = 3
-    matcher = "200,302"
+    matcher             = "200,302"
   }
 }
+

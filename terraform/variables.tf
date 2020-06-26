@@ -1,12 +1,17 @@
-variable "cidr_office" { description = "CIDR allowed connecting to resources, like your office's IP" }
-variable "s3_bucket_name" { description = "Your S3 bucket name" }
+variable "cidr_office" {
+  description = "CIDR allowed connecting to resources, like your office's IP"
+}
+
+variable "s3_bucket_name" {
+  description = "Your S3 bucket name"
+}
 
 locals {
   vpc_cidr_block = "10.1.0.0/21"
   vpc_az = [
     "a",
     "c",
-    "d"
+    "d",
   ]
   vpc_subnet_public_cidr_blocks = {
     "a" = "10.1.0.0/24"
@@ -19,3 +24,4 @@ locals {
     "d" = "10.1.5.0/24"
   }
 }
+
