@@ -1,7 +1,18 @@
-output "aws_secretsmanager_secret_fargate_redash_arn_0" { value = "${aws_secretsmanager_secret.fargate_redash.0.arn}" }
-output "aws_secretsmanager_secret_fargate_redash_arn_1" { value = "${aws_secretsmanager_secret.fargate_redash.1.arn}" }
-output "aws_secretsmanager_secret_fargate_redash_arn_2" { value = "${aws_secretsmanager_secret.fargate_redash.2.arn}" }
-output "aws_secretsmanager_secret_fargate_redash_arn_3" { value = "${aws_secretsmanager_secret.fargate_redash.3.arn}" }
+output "aws_secretsmanager_secret_fargate_redash_arn_0" {
+  value = aws_secretsmanager_secret.fargate_redash[0].arn
+}
+
+output "aws_secretsmanager_secret_fargate_redash_arn_1" {
+  value = aws_secretsmanager_secret.fargate_redash[1].arn
+}
+
+output "aws_secretsmanager_secret_fargate_redash_arn_2" {
+  value = aws_secretsmanager_secret.fargate_redash[2].arn
+}
+
+output "aws_secretsmanager_secret_fargate_redash_arn_3" {
+  value = aws_secretsmanager_secret.fargate_redash[3].arn
+}
 
 locals {
   secrets = [
@@ -18,41 +29,45 @@ locals {
     {
       name          = "${var.site_id}-fargate/redash-cookie-secret"
       description   = "The value of REDASH_COOKIE_SECRET"
-      secret_string = "${random_string.redash_cookie_secret.result}"
+      secret_string = random_string.redash_cookie_secret.result
     },
     {
       name          = "${var.site_id}-fargate/redash-secret-key"
       description   = "The value of REDASH_SECRET_KEY"
-      secret_string = "${random_string.redash_secret_key.result}"
-    }
+      secret_string = random_string.redash_secret_key.result
+    },
   ]
 }
 
 data "aws_elasticache_replication_group" "fargate_redis" {
   replication_group_id = "${var.site_id}-fargate-redis"
 }
+
 resource "random_string" "redash_cookie_secret" {
   length  = 32
   special = false
 }
+
 resource "random_string" "redash_secret_key" {
   length  = 32
   special = false
 }
 
 resource "aws_secretsmanager_secret" "fargate_redash" {
-  count = "${length(local.secrets)}"
+  count = length(local.secrets)
 
-  name        = "${lookup(local.secrets[count.index], "name")}"
-  description = "${lookup(local.secrets[count.index], "description")}"
+  name        = local.secrets[count.index]["name"]
+  description = local.secrets[count.index]["description"]
 
   tags = {
-    Owner = "${var.owner}"
+    Owner = var.owner
   }
 }
-resource "aws_secretsmanager_secret_version" "fargate_redash" {
-  count = "${length(local.secrets)}"
 
-  secret_id     = "${aws_secretsmanager_secret.fargate_redash.*.id[count.index]}"
-  secret_string = "${lookup(local.secrets[count.index], "secret_string")}"
+resource "aws_secretsmanager_secret_version" "fargate_redash" {
+  count = length(local.secrets)
+
+  secret_id     = aws_secretsmanager_secret.fargate_redash[count.index].id
+  secret_string = local.secrets[count.index]["secret_string"]
 }
+
